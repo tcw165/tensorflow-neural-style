@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:boyw165/tensorflow-vgg.git
+	branch = master
+	commit = 13f9c73791c8f647058482dbbb908fe6c631b433
+	parent = 8404a23ae70a1cadea032cbb528fc8331fbcffc0
+	cmdver = 0.3.0
