@@ -4,7 +4,7 @@ import tensorflow as tf
 _VGG_MEAN = [103.939, 116.779, 123.68]
 
 
-class Vgg19:
+class Vgg16:
     """
     A VGG-19 Network implementation using TensorFlow library.
     The network takes an image of size 224x224 with RGB channels and returns
@@ -58,19 +58,16 @@ class Vgg19:
     _conv3_1 = None
     _conv3_2 = None
     _conv3_3 = None
-    _conv3_4 = None
     _pool3 = None
 
     _conv4_1 = None
     _conv4_2 = None
     _conv4_3 = None
-    _conv4_4 = None
     _pool4 = None
 
     _conv5_1 = None
     _conv5_2 = None
     _conv5_3 = None
-    _conv5_4 = None
     _pool5 = None
 
     _fc6 = None
@@ -95,9 +92,6 @@ class Vgg19:
                  model_save_freq=0):
         """
         :param model: The model either for back-propagation or
-        :param model_save_path: The model path for training process.
-        :param model_save_freq: Save the model (in training process) every N
-        iterations.
         forward-propagation.
         """
         self.model = self._init_empty_model() if not model else model
@@ -112,9 +106,9 @@ class Vgg19:
         # Size: 224x224x3
         self._inputRGB = tf.placeholder(tf.float32,
                                         [None,
-                                         Vgg19.WIDTH,
-                                         Vgg19.HEIGHT,
-                                         Vgg19.CHANNELS])
+                                         Vgg16.WIDTH,
+                                         Vgg16.HEIGHT,
+                                         Vgg16.CHANNELS])
 
         # Convert RGB to BGR order
         # Size: 224x224x3
@@ -127,7 +121,6 @@ class Vgg19:
 
         # normalize the input so that the elements all have nearly equal
         # variances.
-        # Size: 224x224x3
         self._inputNormalizedBGR = tf.concat(3, [
             blue - _VGG_MEAN[0],
             green - _VGG_MEAN[1],
@@ -151,25 +144,22 @@ class Vgg19:
         self._conv3_1 = self._conv_layer(self._pool2, "conv3_1")
         self._conv3_2 = self._conv_layer(self._conv3_1, "conv3_2")
         self._conv3_3 = self._conv_layer(self._conv3_2, "conv3_3")
-        self._conv3_4 = self._conv_layer(self._conv3_3, "conv3_4")
         # Size: 28x28x256
-        self._pool3 = self._max_pool(self._conv3_4, 'pool3')
+        self._pool3 = self._max_pool(self._conv3_3, 'pool3')
 
         # Size: 28x28x512
         self._conv4_1 = self._conv_layer(self._pool3, "conv4_1")
         self._conv4_2 = self._conv_layer(self._conv4_1, "conv4_2")
         self._conv4_3 = self._conv_layer(self._conv4_2, "conv4_3")
-        self._conv4_4 = self._conv_layer(self._conv4_3, "conv4_4")
         # Size: 14x14x512
-        self._pool4 = self._max_pool(self._conv4_4, 'pool4')
+        self._pool4 = self._max_pool(self._conv4_3, 'pool4')
 
         # Size: 14x14x512
         self._conv5_1 = self._conv_layer(self._pool4, "conv5_1")
         self._conv5_2 = self._conv_layer(self._conv5_1, "conv5_2")
         self._conv5_3 = self._conv_layer(self._conv5_2, "conv5_3")
-        self._conv5_4 = self._conv_layer(self._conv5_3, "conv5_4")
         # Size: 7x7x512
-        self._pool5 = self._max_pool(self._conv5_4, 'pool5')
+        self._pool5 = self._max_pool(self._conv5_3, 'pool5')
 
         # Size: 25088(=7x7x512)x4096
         self._fc6 = self._fc_layer(self._pool5, "fc6")
@@ -302,8 +292,6 @@ class Vgg19:
                         np.ndarray([256])],
             "conv3_3": [np.ndarray([3, 3, 256, 256]),
                         np.ndarray([256])],
-            "conv3_4": [np.ndarray([3, 3, 256, 256]),
-                        np.ndarray([256])],
             # Conv-layer 4.
             "conv4_1": [np.ndarray([3, 3, 256, 512]),
                         np.ndarray([512])],
@@ -311,16 +299,12 @@ class Vgg19:
                         np.ndarray([512])],
             "conv4_3": [np.ndarray([3, 3, 512, 512]),
                         np.ndarray([512])],
-            "conv4_4": [np.ndarray([3, 3, 512, 512]),
-                        np.ndarray([512])],
             # Conv-layer 5.
             "conv5_1": [np.ndarray([3, 3, 512, 512]),
                         np.ndarray([512])],
             "conv5_2": [np.ndarray([3, 3, 512, 512]),
                         np.ndarray([512])],
             "conv5_3": [np.ndarray([3, 3, 512, 512]),
-                        np.ndarray([512])],
-            "conv5_4": [np.ndarray([3, 3, 512, 512]),
                         np.ndarray([512])],
             # FC layer.
             "fc6": [np.ndarray([25088, 4096]),

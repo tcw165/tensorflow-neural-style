@@ -6,6 +6,6 @@
 [subrepo]
 	remote = git@github.com:boyw165/tensorflow-vgg.git
 	branch = master
-	commit = 13f9c73791c8f647058482dbbb908fe6c631b433
-	parent = 8404a23ae70a1cadea032cbb528fc8331fbcffc0
+	commit = 13b51d8303c580d8a45be35b6229c39bf9534878
+	parent = 148c4641dd69a9ec6bf4b47dacd44fa662c6956f
 	cmdver = 0.3.0
